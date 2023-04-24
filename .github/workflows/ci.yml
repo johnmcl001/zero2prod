@@ -3,7 +3,7 @@ on: [push]
 name: CI
   
 jobs:
-  lint:
+  linting:
     name: Linting
     runs-on: ubuntu-latest
     steps:
@@ -11,10 +11,21 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          components: rustfmt
+          components: clippy
       - name: Lint Code
+        run: cargo clippy -- -D warnings
+          
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: Enforce Code Format
         run: cargo fmt --check
-    
   
   test:
     name: Test
@@ -39,3 +50,12 @@ jobs:
       - name: Generate Code Coverage
         run: |
           cargo tarpaulin --ignore-tests
+          
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: taiki-e/install-action@cargo-deny
+      - name: Scan for vulnerabilities
+        run: cargo deny check advisories
