@@ -34,7 +34,7 @@ jobs:
           --no-default-features
           --locked
       - name: Install Posgres client
-        run: sudo apt-get update && sudo apt-get install postgres-client -y
+        run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Lint Code
@@ -77,7 +77,7 @@ jobs:
           --no-default-features
           --locked
       - name: Install Posgres client
-        run: sudo apt-get update && sudo apt-get install postgres-client -y
+        run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Run Tests
