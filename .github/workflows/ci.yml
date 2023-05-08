@@ -31,7 +31,7 @@ jobs:
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgres-client -y
       - name: Migrate DB
-        run SKIP_DOCKER=TRUE ./scripts/init_db.sh
+        run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Lint Code
         run: cargo clippy -- -D warnings
 
@@ -74,7 +74,7 @@ jobs:
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgres-client -y
       - name: Migrate DB
-        run SKIP_DOCKER=TRUE ./scripts/init_db.sh
+        run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Run Tests
         run: cargo test
 
