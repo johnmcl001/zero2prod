@@ -1,6 +1,11 @@
 on: [push]
   
 name: CI
+
+env:
+  CARGO_TERM_COLOR: always
+  SQLX_VERSION: 0.5.7
+  SQLX_FEATURES:   "rustls,postgres"
   
 jobs:
   linting:
