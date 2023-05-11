@@ -8,6 +8,51 @@ env:
   SQLX_FEATURES:   "rustls,postgres"
   
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432 
+    steps:
+      - name: Checkout code.
+        uses: actions/checkout@v3
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Install sqlx-cli
+        run:
+          cargo install sqlx-cli
+          --version=${{ env.SQLX_VERSION }}
+          --features=${{ env.SQLX_FEATURES }}
+          --no-default-features
+          --locked
+      - name: Install Posgres client
+        run: sudo apt-get update && sudo apt-get install postgresql-client -y
+      - name: Migrate DB
+        run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
+      - name: Run Tests
+        run: cargo test
+
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: Enforce Code Format
+        run: cargo fmt --check
+
   linting:
     name: Linting
     runs-on: ubuntu-latest
@@ -40,49 +85,6 @@ jobs:
       - name: Lint Code
         run: cargo clippy -- -D warnings
 
-  formatting:
-    name: Formatting
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          components: rustfmt
-      - name: Enforce Code Format
-        run: cargo fmt --check
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - name: Install sqlx-cli
-        run:
-          cargo install sqlx-cli
-          --version=${{ env.SQLX_VERSION }}
-          --features=${{ env.SQLX_FEATURES }}
-          --no-default-features
-          --locked
-      - name: Install Posgres client
-        run: sudo apt-get update && sudo apt-get install postgresql-client -y
-      - name: Migrate DB
-        run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
-      - name: Run Tests
-        run: cargo test
-
   coverage:
     name: Code Coverage
     runs-on: ubuntu-latest
@@ -95,9 +97,6 @@ jobs:
           POSTGRES_DB: postgres
         ports:
           - 5432:5432 
-    container:
-      image: xd009642/tarpaulin
-      options: --security-opt seccomp=unconfined
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -114,7 +113,8 @@ jobs:
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Generate Code Coverage
         run: |
-          cargo tarpaulin --ignore-tests
+          cargo install cargo-tarpaulin && |
+          cargo tarpaulin --verbose --workspace --ignore-tests
 
   audit:
     name: Security Audit
