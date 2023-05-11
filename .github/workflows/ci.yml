@@ -107,9 +107,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Rust Cache Action
+        uses: Swatinem/rust-cache@v2
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgresql-client -y
-        uses: Swatinem/rust-cache@v2
       - name: Install sqlx-cli
         run:
           cargo install sqlx-cli
