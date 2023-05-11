@@ -39,7 +39,7 @@ jobs:
           --no-default-features
           --locked
       - name: Install Nextest
-        run: cargo install nextest
+        run: cargo install cargo-nextest
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
@@ -114,7 +114,7 @@ jobs:
           --no-default-features
           --locked
       - name: Install Nextest
-        run: cargo install nextest
+        run: cargo install cargo-nextest
       - name: Install llvm-cov
         run: cargo install cargo-llvm-cov
       - name: Install Posgres client
