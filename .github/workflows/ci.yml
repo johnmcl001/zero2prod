@@ -1,4 +1,4 @@
-on: [dispatch, push]
+on: [workflow_dispatch, push]
   
 name: CI
 
