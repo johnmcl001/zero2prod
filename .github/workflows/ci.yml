@@ -1,4 +1,4 @@
-on: [push]
+on: [dispatch, push]
   
 name: CI
 
