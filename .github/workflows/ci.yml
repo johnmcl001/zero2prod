@@ -38,12 +38,14 @@ jobs:
           --features=${{ env.SQLX_FEATURES }}
           --no-default-features
           --locked
+      - name: Install Nextest
+        run: cargo install nextest
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Run Tests
-        run: cargo test
+        run: cargo nextest run
 
   formatting:
     name: Formatting
@@ -111,14 +113,16 @@ jobs:
           --features=${{ env.SQLX_FEATURES }}
           --no-default-features
           --locked
-      - name: Install tarpaulin
-        run: cargo install cargo-tarpaulin
+      - name: Install Nextest
+        run: cargo install nextest
+      - name: Install llvm-cov
+        run: cargo install cargo-llvm-cov
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Generate Code Coverage
-        run: cargo tarpaulin --verbose --workspace --ignore-tests
+        run: cargo llvm-cov nextest
 
   audit:
     name: Security Audit
