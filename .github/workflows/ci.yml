@@ -108,7 +108,7 @@ jobs:
           --no-default-features
           --locked
       - name: Install tarpaulin
-        run: cargo install cargo-tarpauling
+        run: cargo install cargo-tarpaulin
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
