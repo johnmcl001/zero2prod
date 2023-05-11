@@ -107,14 +107,14 @@ jobs:
           --features=${{ env.SQLX_FEATURES }}
           --no-default-features
           --locked
+      - name: Install tarpaulin
+        run: cargo install cargo-tarpauling
       - name: Install Posgres client
         run: sudo apt-get update && sudo apt-get install postgresql-client -y
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Generate Code Coverage
-        run: |
-          cargo install cargo-tarpaulin && |
-          cargo tarpaulin --verbose --workspace --ignore-tests
+        run: cargo tarpaulin --verbose --workspace --ignore-tests
 
   audit:
     name: Security Audit
