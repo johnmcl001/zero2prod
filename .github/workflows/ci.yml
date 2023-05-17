@@ -36,12 +36,10 @@ jobs:
           --features=${{ env.SQLX_FEATURES }}
           --no-default-features
           --locked
-      - name: Install Nextest
-        run: cargo install cargo-nextest
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Run tests
-        run: cargo nextest run
+        run: cargo test
 
   formatting:
     name: Formatting
@@ -119,14 +117,12 @@ jobs:
           --features=${{ env.SQLX_FEATURES }}
           --no-default-features
           --locked
-      - name: Install Nextest
-        run: cargo install cargo-nextest
       - name: Install llvm-cov
         run: cargo install cargo-llvm-cov
       - name: Migrate DB
         run: SKIP_DOCKER=TRUE ./scripts/init_db.sh
       - name: Generate Code Coverage
-        run: cargo llvm-cov nextest
+        run: cargo llvm-cov
 
   audit:
     name: Security Audit
