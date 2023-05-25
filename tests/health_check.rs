@@ -118,12 +118,6 @@ async fn subscribe_returns_a_400_when_fields_are_present_but_empty() {
     }
 }
 
-#[test]
-fn dummy_fail() {
-    let result: Result<&str, &str> = Err("The app crashed due to an IO error");
-    claims::assert_ok!(result);
-}
-
 static TRACING: Lazy<()> = Lazy::new(|| {
     if std::env::var("TEST_LOG").is_ok() {
         let subscriber = get_subscriber("test".into(), "debug".into(), std::io::stdout);
