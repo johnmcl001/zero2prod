@@ -14,8 +14,19 @@ name = "zero2prod"
 
 [dependencies]
 actix-web = "4.4.0"
+config = "0.13.3"
 reqwest = "0.11.20"
+serde = { version = "1.0.188", features = ["derive"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
-[target.x86_64-unknown-linux-gnu]
-rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=lld"]
+[dependencies.sqlx]
+version = "0.5.7"
+default-features = false
+features = [
+    "runtime-actix-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate"
+]
