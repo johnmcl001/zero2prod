@@ -41,7 +41,7 @@ impl DatabaseSettings {
         PgConnectOptions::new()
             .host(&self.host)
             .username(&self.username)
-            .password(&self.password.expose_secret())
+            .password(self.password.expose_secret())
             .port(self.port)
             .ssl_mode(ssl_mode)
     }
@@ -115,5 +115,5 @@ fn get_config_from_file(
         .as_path()
         .to_str()
         .map(config::File::with_name)
-        .expect(&format!("Config file not found: {}", file_name))
+        .unwrap_or_else(|| panic!("Config file not found: {}", file_name))
 }
